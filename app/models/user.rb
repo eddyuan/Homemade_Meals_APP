@@ -19,7 +19,7 @@ class User < ApplicationRecord
   has_secure_password
 
   def cook_rating
-    received_reviews.count > 0 ? self.received_reviews.average(:rating) : 0
+    self.received_reviews.count > 0 ? self.received_reviews.average(:rating) : 0
   end
 
   private
