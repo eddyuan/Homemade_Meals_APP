@@ -1,7 +1,7 @@
 class MealsController < ApplicationController
-before_action :find_meal, only: [:edit, :update]
-before_action :authenticate_user!, except: [:show, :index]
-# before_action :authorize_user!, only: [:edit, :update, :destroy]
+  before_action :find_meal, only: %i[edit update]
+  before_action :authenticate_user!, except: %i[show index]
+  # before_action :authorize_user!, only: [:edit, :update, :destroy]
 
   def new
     @meal = Meal.new
@@ -11,7 +11,7 @@ before_action :authenticate_user!, except: [:show, :index]
     @meal = Meal.new(meal_params)
     @meal.user = current_user
     if @meal.save
-      flash[:success]= "Meal created successfully!"
+      flash[:success] = "Meal created successfully!"
       redirect_to meal_path(@meal)
     else
       render :new
@@ -20,11 +20,8 @@ before_action :authenticate_user!, except: [:show, :index]
 
   def index
     @meals = Meal.order(updated_at: :desc)
-
-    # top 10 rated cooks query needs to be changed
-    @cooks = User.where(is_cook: :true).sort{|a,b| b.cook_rating <=> a.cook_rating}.slice(0,10)
-    # @cooks = User.joins(:meals).joins(:reviews).where(is_cook: :true).order(‘avg(reviews.rating)’).limit(10)
-
+    cooks = User.where(is_cook: :true)
+    @cooks = cooks.sort_by(&:average_rating).reverse[0...10]
   end
 
   def show
@@ -45,21 +42,22 @@ before_action :authenticate_user!, except: [:show, :index]
   end
 
   def destroy
-      @meal = Meal.find params[:id]
-      @meal.destroy
-      redirect_to meals_path, notice: "Meal Deleted" # should probably redirect to cook admin panel page
+    @meal = Meal.find params[:id]
+    @meal.destroy
+    redirect_to meals_path, notice: "Meal Deleted" # should probably redirect to cook admin panel page
   end
 
   private
-    def meal_params
-      params.require(:meal).permit!
-    end
 
-    def find_meal
-      @meal = Meal.find params[:id]
-    end
+  def meal_params
+    params.require(:meal).permit!
+  end
 
-    # def authorize_user!
-    #   redirect_to root_path, alert: "Not authorized!" unless can?(:crud, @meal)
-    # end
+  def find_meal
+    @meal = Meal.find params[:id]
+  end
+
+  # def authorize_user!
+  #   redirect_to root_path, alert: "Not authorized!" unless can?(:crud, @meal)
+  # end
 end

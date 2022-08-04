@@ -96,8 +96,8 @@ users = User.all
             )
         end
     end
+  end
 end
-
 
 20.times do |n|
     username = Faker::Name.first_name

@@ -130,6 +130,8 @@ GEM
     nio4r (2.5.8)
     nokogiri (1.13.8-arm64-darwin)
       racc (~> 1.4)
+    nokogiri (1.13.8-x86_64-darwin)
+      racc (~> 1.4)
     nokogiri (1.13.8-x86_64-linux)
       racc (~> 1.4)
     pg (1.4.2)
@@ -214,6 +216,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-21
+  x86_64-darwin-21
   x86_64-linux
 
 DEPENDENCIES
@@ -242,4 +245,4 @@ RUBY VERSION
    ruby 3.0.0p0
 
 BUNDLED WITH
-   2.3.17
+   2.3.19
