@@ -21,7 +21,7 @@ class MealsController < ApplicationController
   def index
     @meals = Meal.order(updated_at: :desc)
     cooks = User.where(is_cook: :true)
-    @cooks = cooks.sort_by(&:average_rating).reverse[0...10]
+    @cooks = cooks.sort_by(&:cook_rating).reverse[0...10]
   end
 
   def show

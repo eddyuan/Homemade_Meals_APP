@@ -3,11 +3,10 @@
         <h2>Top 10 Rated Cooks</h2>
         <% @cooks.each do |cook| %> 
             <div class="card mb-3">
-            <%= cook.average_rating%>
-            
                 <%= image_tag cook.profile_img_url, class:"card-img-top" %>
                 <div class="card-body">
                     <h5 class="card-title"><%= link_to cook.username, user_path(cook) %></h5>
+                    <div class="starability-result" data-rating="<%= cook.cook_rating.round %>"></div>
                     <p><%= cook.cook_rating %> </p>
                 </div>
             </div>
