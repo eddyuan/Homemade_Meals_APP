@@ -41,9 +41,11 @@ end
 
 ```rb
 # meal.rb
-...def average_rating
+...
+def average_rating
   self.reviews.count > 0 ? self.reviews.average(:rating) : 0
 end
+...
 ```
 
 # README
