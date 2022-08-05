@@ -25,20 +25,6 @@
   width: 3rem !important;
 }
 
-/* //  #hero {
-//    background-image: url(https://images.pexels.com/photos/1095550/pexels-photo-1095550.jpeg?cs=srgb&dl=pexels-daria-shevtsova-1095550.jpg&fm=jpg);
-//    background-size: cover;
-//    width: 100%;
-//    height: 100vh;
-//    background-position: center center;
-//  }
-
-//  #carouselExampleControls {
-//     padding-left: 10em;
-//     padding-right: 10em;
-//     padding-bottom: 3em
-// } */
-
 #logo-footer {
   filter: invert(100%);
 }
@@ -70,20 +56,52 @@ a {
 
 // For meals/show
 .show-image-container {
-  // We can lock aspec ratio
-  padding-bottom: 100%;
-  height: 0;
-  overflow: hidden;
-  position: relative;
-  .show-image {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    object-fit: cover;
-    border-radius: 8px;
-    width: 100%;
-    height: 100%;
-  }
+   padding-bottom: 100%;
+   height: 0;
+   overflow: hidden;
+   position: relative;
+}
+
+.show-image {
+     position: absolute;
+     top: 0;
+     bottom: 0;
+     left: 0;
+     right: 0;
+     object-fit: cover;
+     border-radius: 8px;
+     width: 100%;
+     height: 100%;
+}
+
+.notifications.row{
+   margin: 3em;
+}
+
+.heading.clearfix{
+   text-align: center;
+}
+
+
+.pull-xs-right{
+   display: none;
+}
+
+.notification-group{
+   display: flex-wrap;
+   flex-direction: row;
+}
+
+.group-title{
+   display: none;
+}
+
+.notification-post{
+   display: inline-grid;
+   margin-top: 3em;
+   margin-right: 3em;
+   padding: 1em;
+   width: 18rem;
+   border: 1px solid lightgrey;
+   border-radius: 5px;
 }

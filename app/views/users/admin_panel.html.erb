@@ -1,158 +1,164 @@
 
 <div class="container mt-5">
-
-<div class="d-flex flex-row justify-content-around">
-    <%= link_to "#{Notification.unread_count(current_user)} Notifications", notifications_path%>
-    <div class="container">
-        <h2 class="text-center fw-bold"><%=@user.username%>'s Admin Panel</h2>  
-    </div>
-
+            <div class="container">
+            <h2 class="text-center fw-bold"><%=@user.username%>'s Admin Panel</h2>  
+            </div>
     <div class="d-flex flex-row justify-content-around">
 
 
-        <div class="card p-4 m-2" id="user_profile_container" style="width: 20em;">
-            <img src="<%= @user.profile_img_url%>" >
 
-            <div id="user_profile_infomation">
-                <p><strong>Name: </strong><%=@user.username%></p>
-                <p><strong>Email: </strong><%=@user.email%></p>
-                <% if(@user.meals) %>
-                    <p><strong>Meals Number: </strong><%=@user.meals.count%></p>
+        <div class="d-flex flex-row justify-content-around">
+
+
+            <div class="card p-4 m-2" id="user_profile_container" style="width: 20em;">
+                <% if !(@user.profile_img_url).empty? %>
+                    <img src="<%= @user.profile_img_url%>">
+                <% else %>
+                    <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png">
                 <% end %>
-                <% if(@user.reviews) %>
-                    <p><strong>Reviews Number: </strong><%=@user.reviews.count%></p>
-                <% end %>
-                <% if (@user.is_cook)%>
-                <%= button_to "Create a New Meal", new_meal_path, method: :get, class: "btn btn-dark my-3"%>
-                <% end %>
+                <div id="user_profile_infomation">
+                    <p><strong>Name: </strong><%=@user.username%></p>
+                    <p><strong>Email: </strong><%=@user.email%></p>
+                    <% if(@user.meals) %>
+                        <p><strong>Meals Number: </strong><%=@user.meals.count%></p>
+                    <% end %>
+                    <% if(@user.reviews) %>
+                        <p><strong>Reviews Number: </strong><%=@user.reviews.count%></p>
+                    <% end %>
+                    <% if (@user.is_cook)%>
+                    <%= button_to "Create a New Meal", new_meal_path, method: :get, class: "btn btn-dark my-3"%>
+                    <% end %>
+                    <%= link_to "#{Notification.unread_count(current_user)} Notifications", notifications_path%>
+                </div>
+            </div>
+
+            <div class="container m-2">
+            <%# -----------------If User is a Cook -------------- %>
+                <% if (@user.is_cook) %>
+                    <div class="card p-4" id="user_container">
+
+                        <h2 class="fw-bold ms-1 fw-bold text-center">Your Delish Meals</h2>
+
+                        <br>
+                        <%# -----------------If the cook does not have any meals -------------- %>
+                        <%if(@user.meals.count == 0) %>
+                            <p>You don't have any meals yet!</p>
+                            <%= button_to "Create Your First Meal Now!", new_meal_path, method: :get, class: "btn btn-outline-dark my-3"%>
+                        <% else %>
+                        <%# -----------------If the cook meals -------------- %>
+                            <div class="d-flex flex-wrap justify-content-center">
+
+                            <%@meals = @user.meals%>
+                            <% @meals.each do |meal| %>
+                                <div class="card mx-2 mb-4" style="width: 20em;">
+                                <img class="card-img-top img-fluid" src="<%= meal.img_url %>" alt="Card image cap" >
+                                    <div class="card-body">
+                                        <h4 class="card-title text-center fw-bold"><a href="<%=meal_path(meal)%>" class="text-dark"><%= meal.title%></a></h4>
+                                        <hr>
+                                        <p class="card-text text-truncate text-center"><%= meal.description%></p>
+                                        <p class="card-text text-truncate text-center"><%= number_to_currency(meal.price, precision: 2) %></p>
+
+                                        <% if can? :crud, meal %>
+                                        <div class="container d-flex flex-row justify-content-center">
+                                            <%= button_to "Edit", edit_meal_path(meal), method: :get, class: "btn btn-outline-dark"%>
+                                            <%= button_to "Delete", meal_path(meal), method: :delete, form: {data: {turbo_confirm: 'Are you sure?'}}, class:"btn btn-outline-dark ms-2"%>
+                                        </div>
+                                        <% end %>
+
+                                    </div>
+                                </div>
+                            <% end %>
+                            </div>
+                        <% end %>
+
+                    </div>
+                <%else%>
+                <%# -----------------If User is a Customer -------------- %>
+                    <div class="container d-flex flex-column card mb-4">
+                        <div class=" d-flex flex-column justify-content-center">
+                            <h2 class="mt-4 fw-bold text-center">Your Reviews</h2>
+                        </div>
+
+                        <%@approved_reviews = @user.reviews.select{|x| x.is_approved}%>
+                        <%@pending_reviews = @user.reviews.select{|x| !x.is_approved}%>
+
+                        <div class="row row-cols-2 ms-3 justify-content-center">
+                            <p class="text-center fw-bold m-0">Approved</p>
+                            <% @approved_reviews.each do |review| %>
+                                <div class="card col m-3 py-3" style="width: 40em">
+                                    <div class="card-body">
+                                        <h4 class="card-title fw-bold"><a href="<%=meal_path(review.meal)%>" class="text-dark"><%= review.meal.title%></a></h4>
+                                        <hr>
+                                        <span><strong>Rating: </strong>
+                                            <p class="starability-result" data-rating="<%= review.rating %>"></p>
+                                        </span>
+                                        <p class="card-text text-truncate"><%= review.body%></p>
+                                        <span class="d-flex flex-row align-items-end"><small style="font-size: 12px;"> Posted at <%= review.created_at%> </small>
+                                        <% if can? :crud, review %>
+                                            <%= button_to "Delete", meal_review_path(review.meal, review), method: :delete, form: {data: {turbo_confirm: 'Are you sure?'}}, class:"btn btn-sm btn-outline-dark me-2 mx-1"%>
+                                        <% end %>
+                                    </div>
+                                </div>
+                            <% end %>
+                        </div>
+                        
+                        
+
+                        <div class="row row-cols-2 ms-3 justify-content-center">
+                            <p class="text-center fw-bold m-0">Pending Approval</p>
+                            <% @pending_reviews.each do |review| %>
+                                <div class="card col m-3 py-3" style="width: 40em">
+                                    <div class="card-body">
+                                        <h4 class="card-title fw-bold"><a href="<%=meal_path(review.meal)%>" class="text-dark"><%= review.meal.title%></a></h4>
+                                        <hr>
+                                        <span><strong>Rating: </strong>
+                                            <p class="starability-result" data-rating="<%= review.rating %>"></p>
+                                        </span>
+                                        <p class="card-text text-truncate"><%= review.body%></p>
+                                        <span class="d-flex flex-row align-items-end"><small style="font-size: 12px;">Posted on <%= review.created_at.strftime("%Y-%m-%d")%> </small>
+                                        <% if can? :crud, review %>
+                                            <%= button_to "Delete", meal_review_path(review.meal, review), method: :delete, form: {data: {turbo_confirm: 'Are you sure?'}}, class:"btn btn-sm btn-outline-dark me-2 mx-1"%>
+                                        <% end %>
+                                    </div>
+                                </div>
+                            <% end %>
+                        </div>
+
+                        
+                    </div>
+
+                    <div class="container d-flex flex-column card">
+                        <div class="d-flex flex-row justify-content-center">
+                            <h2 class="mt-4 fw-bold">Your Orders</h2>
+                        </div>
+
+                        <% if @user.orders.count == 0%>
+                            <p class="text-center mt-2">You don't have any orders yet!</p>
+                        <% else %>
+                        <%@orders = @user.orders%>
+                        <div class="row row-cols-2 ms-3 justify-content-center">
+
+                            <% @orders.each do |order| %>
+                                <div class="card col m-4 py-3" style="width:40em">
+                                    <div class="card-body">
+                                        <h4><a href="<%=order_path(order)%>" class="text-dark fw-bold">Order ID#<%= order.id%></a></h4>
+                                        <hr>
+                                        <h4 class="card-title fw-bold"><%= order.meal.title %></h4>
+                                        <p>Cook: <%= order.meal.user.username %></p>
+                                        <p>Price: <%= number_to_currency(order.meal.price, precision: 2)%></p>
+                                        <p>Date: <%= order.created_at.strftime("%Y-%m-%d") %></p>
+                                    </div>
+                                </div>
+                            <% end %>
+                        </div>
+
+                        <% end %>
+
+                    </div>
+                <%end%>
             </div>
         </div>
 
-
-        <div class="container m-2">
-            <% if (@user.is_cook) %>
-                <div class="card p-4" id="user_container">
-
-                    <h2 class="fw-bold ms-1 fw-bold text-center">Your Delish Meals</h2>
-
-                    <br>
-                    <%if(@user.meals.count == 0) %>
-                        <p>You don't have any meals yet!</p>
-                        <%= button_to "Create Your First Meal Now!", new_meal_path, method: :get, class: "btn btn-outline-dark my-3"%>
-                    <% else %>
-                        <div class="d-flex flex-wrap justify-content-center">
-                        <%@meals = @user.meals%>
-                        <% @meals.each do |meal| %>
-                            <div class="card mx-2 mb-4" style="width: 20em;">
-                            <img class="card-img-top img-fluid" src="<%= meal.img_url %>" alt="Card image cap" >
-                                <div class="card-body">
-                                    <h4 class="card-title text-center fw-bold"><a href="<%=meal_path(meal)%>" class="text-dark"><%= meal.title%></a></h4>
-                                    <hr>
-                                    <p class="card-text text-truncate text-center"><%= meal.description%></p>
-                                    <p class="card-text text-truncate text-center"><%= number_to_currency(meal.price, precision: 2) %></p>
-
-                                    <% if can? :crud, meal %>
-                                    <div class="container d-flex flex-row justify-content-center">
-                                        <%= button_to "Edit", edit_meal_path(meal), method: :get, class: "btn btn-outline-dark"%>
-                                        <%= button_to "Delete", meal_path(meal), method: :delete, form: {data: {turbo_confirm: 'Are you sure?'}}, class:"btn btn-outline-dark ms-2"%>
-                                    </div>
-                                    <% end %>
-                                </div>
-                            </div>
-                        <% end %>
-                        </div>
-                    <% end %>
-
-                </div>
-            <%else%>
-                <div class="container d-flex flex-column card mb-4">
-                    <div class=" d-flex flex-column justify-content-center">
-                        <h2 class="mt-4 fw-bold text-center">Your Reviews</h2>
-                    </div>
-
-                     
-                     <%@approved_reviews = @user.reviews.select{|x| x.is_approved}%>
-                     <%@pending_reviews = @user.reviews.select{|x| !x.is_approved}%>
-
-                    <div class="row row-cols-2 ms-3 justify-content-center">
-                        <p>Approved Reviews</p>
-                        <% @approved_reviews.each do |review| %>
-                            <div class="card col m-3 py-3" style="width: 40em">
-                                <div class="card-body">
-                                    <h4 class="card-title fw-bold"><a href="<%=meal_path(review.meal)%>" class="text-dark"><%= review.meal.title%></a></h4>
-                                    <hr>
-                                    <span><strong>Rating: </strong>
-                                        <%review.rating.times do %>
-                                            ★
-                                        <% end %>
-                                    </span>
-                                    <p class="card-text text-truncate"><%= review.body%></p>
-                                    <span class="d-flex flex-row align-items-end"><small style="font-size: 12px;"> Posted at <%= review.created_at%> </small>
-                                    <% if can? :crud, review %>
-                                        <%= button_to "Delete", meal_review_path(review.meal, review), method: :delete, form: {data: {turbo_confirm: 'Are you sure?'}}, class:"btn btn-sm btn-outline-dark me-2 mx-1"%>
-                                    <% end %>
-                                </div>
-                            </div>
-                        <% end %>
-                    </div>
-                    
-                    
-
-                    <div class="row row-cols-2 ms-3 justify-content-center">
-                        <p>Pending Reviews</p>
-                        <% @pending_reviews.each do |review| %>
-                            <div class="card col m-3 py-3" style="width: 40em">
-                                <div class="card-body">
-                                    <h4 class="card-title fw-bold"><a href="<%=meal_path(review.meal)%>" class="text-dark"><%= review.meal.title%></a></h4>
-                                    <hr>
-                                    <span><strong>Rating: </strong>
-                                        <%review.rating.times do %>
-                                            ★
-                                        <% end %>
-                                    </span>
-                                    <p class="card-text text-truncate"><%= review.body%></p>
-                                    <span class="d-flex flex-row align-items-end"><small style="font-size: 12px;">Posted on <%= review.created_at.strftime("%Y-%m-%d")%> </small>
-                                    <% if can? :crud, review %>
-                                        <%= button_to "Delete", meal_review_path(review.meal, review), method: :delete, form: {data: {turbo_confirm: 'Are you sure?'}}, class:"btn btn-sm btn-outline-dark me-2 mx-1"%>
-                                    <% end %>
-                                </div>
-                            </div>
-                        <% end %>
-                    </div>
-
-                    <% end %>
-                </div>
-
-                <div class="container d-flex flex-column card">
-                    <div class="d-flex flex-row justify-content-center">
-                        <h2 class="mt-4 fw-bold">Your Orders</h2>
-                    </div>
-
-                    <% if @user.orders.count == 0%>
-                        <p class="text-center mt-2">You don't have any orders yet!</p>
-                    <% else %>
-                    <%@orders = @user.orders%>
-                    <div class="row row-cols-2 ms-3 justify-content-center">
-
-                        <% @orders.each do |order| %>
-                            <div class="card col m-4 py-3" style="width:40em">
-                                <div class="card-body">
-                                    <h4><a href="<%=order_path(order)%>" class="text-dark fw-bold">Order ID#<%= order.id%></a></h4>
-                                    <hr>
-                                    <h4 class="card-title fw-bold"><%= order.meal.title %></h4>
-                                    <p>Cook: <%= order.meal.user.username %></p>
-                                    <p>Price: <%= number_to_currency(order.meal.price, precision: 2)%></p>
-                                    <p>Date: <%= order.created_at.strftime("%Y-%m-%d") %></p>
-                                </div>
-                            </div>
-                        <% end %>
-                    </div>
-
-                    <% end %>
-
-                </div>
-                    <%end%>
-        </div>
     </div>
 
 </div>

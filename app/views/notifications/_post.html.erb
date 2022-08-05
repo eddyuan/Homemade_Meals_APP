@@ -1,4 +1,7 @@
-<div>
-    <%= link_to notification.actor.username, main_app.user_path(notification.actor)%> has approved your review in
-    <%= link_to notification.target.meal.title, main_app.meal_path(notification.target.meal) %>
-</div>
+  <%if notification.target%>
+    <img class="card-img-top" src="<%= notification.target.meal.img_url%>" alt="Card image cap">
+    <div class="card-body">
+      <%= link_to notification.actor.username, main_app.user_path(notification.actor), class:"text-capitalize text-dark text-decoration-underline"%> has approved your review in
+      <%= link_to notification.target.meal.title, main_app.meal_path(notification.target.meal), class:"fw-bold text-dark text-decoration-underline" %>
+    </div>
+  <% end %>

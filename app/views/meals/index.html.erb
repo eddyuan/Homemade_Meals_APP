@@ -1,34 +1,40 @@
-<div class="row mx-5 my-5">
-    <div class="col-2 me-3 index-cooks-container">
-        <h2>Top 10 Rated Cooks</h2>
+<div class="container mt-3 me-2">
+<div class="row">
+    <div class="col-2 index-cooks-container">
+        <h5 class="fw-bold text-center text-dark">Top 10 Rated Cooks</h5>
         <% @cooks.each do |cook| %> 
             <div class="card mb-3">
                 <%= image_tag cook.profile_img_url, class:"card-img-top" %>
                 <div class="card-body">
-                    <h5 class="card-title"><%= link_to cook.username, user_path(cook) %></h5>
-                    <div class="starability-result" data-rating="<%= cook.cook_rating.round %>"></div>
-                    <p><%= cook.cook_rating %> </p>
+                    <h5 class="card-title text-dark"><%= link_to cook.username, user_path(cook), class:"text-dark fw-bold text-capitalize"%></h5>
+                    <p>Rating: <%= cook.cook_rating %></p>
+                    <p class="starability-result" data-rating="<%= cook.cook_rating.to_i %>">Rating: </p>
                 </div>
             </div>
         <% end %> 
     </div>
 
-    <div class="flex-container col-8 offset-1">
+    <div class="flex-container col-9 offset-1 d-flex justify-content-center m-0">
          
         <% @meals.each do |meal| %>
-            <div class="item-container">
+            <div class="item-container m-3">
             
-                <div class="card mb-1 index-card h-100">
+                <div class="card m3 index-card h-100">
                    <%= image_tag meal.img_url, class:"card-img-top" %>
                     <div class="card-body">
                         <div class="mb-1 d-flex justify-content-center">
-                        <%= link_to meal.title, meal_path(meal), class:"title-list-item"%>
+                        <h4><%= link_to meal.title, meal_path(meal), class:"title-list-item text-dark fw-bold"%></h4>
                         </div>
-                        <div class="mb-3 index-chef d-flex justify-content-center">
-                         Cook: <%= link_to meal.user.username, user_path(meal.user) %>
+                        <div class="mb-1 index-chef d-flex justify-content-center">
+                         <p class="text-dark">Cook: <%= link_to meal.user.username, user_path(meal.user), class:"text-dark"%></p>
                         </div>
                         <div >
-                            <%= meal.description %>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <p class="starability-result me-2" data-rating="<%= meal.reviews.average(:rating).to_i %>"></p>
+                            <p><%=meal.reviews.count%> reviews</p>
+                        </div>
+                        <p><%= meal.description %></p>
+                        <p class="fw-bold"><%= number_to_currency(meal.price, precision: 2)%></p>
                         </div>
                     </div>
                 </div>
@@ -37,6 +43,7 @@
         </div>
 
 
+</div>
 </div>
 
 

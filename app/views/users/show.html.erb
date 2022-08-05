@@ -1,14 +1,15 @@
+<div class="container">
 <% if (@user.is_cook) %>
     <div class="container d-flex flex-column">
         <div class="d-flex flex-row justify-content-center">
-            <h2><%=@user.username%>'s Meal</h2>
+            <h2><%=@user.username%>'s Meals</h2>
             <br>
         </div>
         <%@meals = @user.meals%>
         <div class="row row-cols-2 ms-3">
             <% @meals.each do |meal| %>
-                <div class="card col m-3 py-3" style="width: 25rem;">
-                    <img src="<%= meal.img_url%>" class="card-img-top " alt="" style="width: 22rem; height: 15rem">
+                <div class="card col m-3 py-3" style="width: 18rem;">
+                    <img src="<%= meal.img_url%>" class="card-img-top " alt="" >
                     <div class="card-body">
                         <h5 class="card-title"><a href="<%=meal_path(meal)%>" class="text-decoration-none"><%= meal.title%></a></h5>
                         <p class="card-text text-truncate"><%= meal.description%></p>
@@ -22,12 +23,12 @@
 <%if(@user.reviews)%>
     <div class="container d-flex flex-column">
         <div class="d-flex flex-row justify-content-center">
-            <h2><%=@user.username%>'s Review</h2>
+            <h2><%=@user.username%>'s Reviews</h2>
         </div>
         <%@reviews = @user.reviews%>
         <div class="row row-cols-2 ms-3">
             <% @reviews.each do |review| %>
-                <div class="card col m-3 py-3" style="width: 25rem;">
+                <div class="card col m-3 py-3" style="width: 18rem;">
                     <div class="card-body">
                         <h5 class="card-title"><a href="<%=meal_path(review.meal)%>" class="text-decoration-none"><%= review.meal.title%></a></h5>
                         <hr>
@@ -44,3 +45,4 @@
      </div>
 <% end %>
 
+</div>
