@@ -13,16 +13,17 @@
  *= require_tree .
  *= require_self
  */
- 
+
 * {
-   font-family: 'Poppins', sans-serif;
-   margin: 0;
-   padding: 0;
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
 }
- 
- #logo, #logo-footer {
-    width: 3rem !important;
- }
+
+#logo,
+#logo-footer {
+  width: 3rem !important;
+}
 
 /* //  #hero {
 //    background-image: url(https://images.pexels.com/photos/1095550/pexels-photo-1095550.jpeg?cs=srgb&dl=pexels-daria-shevtsova-1095550.jpg&fm=jpg);
@@ -39,45 +40,50 @@
 // } */
 
 #logo-footer {
-   filter: invert(100%);
+  filter: invert(100%);
 }
 
 a {
-   text-decoration: none
+  text-decoration: none;
 }
 
 #search-bar {
-   width: 5em;
+  width: 5em;
 }
 
 .carousel-item > img {
-   width: 10rem
+  width: 10rem;
 }
 
 .flex-container {
-   display: flex;
-   flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .item-container {
-   margin-right: 1em;
+  margin-right: 1em;
 }
-
 
 .index-card {
-   width: 18rem;
+  width: 18rem;
 }
 
+// For meals/show
 .show-image-container {
-   height: 30em;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   overflow: hidden
-}
-
-.show-image {
-   flex-shrink: 0;
-   min-width: 100%;
-   min-height: 100%
+  // We can lock aspec ratio
+  padding-bottom: 100%;
+  height: 0;
+  overflow: hidden;
+  position: relative;
+  .show-image {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    object-fit: cover;
+    border-radius: 8px;
+    width: 100%;
+    height: 100%;
+  }
 }

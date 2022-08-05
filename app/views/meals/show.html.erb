@@ -1,74 +1,80 @@
-<div class="row mx-5 my-5">
-    <div class="show-image-container col-5 offset-1 me-3">
-        <%= image_tag @meal.img_url, class:"show-image" %>
-    </div>
-    <div class="card col-5 ms-3">
-        <div class="card-body">
-            <div class="card-body">
-                <h5 class="card-title"><%= @meal.title %></h5>
-                <p class="card-text"><%= @meal.description %></p>
-              </div>
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item">Ingredients: <%= @meal.ingredients %></li>
-                <li class="list-group-item">Price: <%= @meal.price %></li>
-                <li class="list-group-item">Cook: <%= @meal.user.username %></li> <%# this could link to user show page of the cook #%> 
-              </ul>
-              <div class="card-body">
-                <a href="<%=new_meal_order_path(@meal)%>" class="btn btn-warning">Order Now</a>
-              </div>
+<div class="container">
+    
+    <div class="card">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card-body pe-md-0">
+                    <div class="show-image-container ">
+                        <%= image_tag @meal.img_url, class:"show-image" %>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card-body">
+                    <h5 class="card-title"><%= @meal.title %></h5>
+                    <p class="card-text"><%= @meal.description %></p>
+                    <ul class="list-group list-group-flush mx-0">
+                        <li class="list-group-item px-0">Ingredients: <%= @meal.ingredients %></li>
+                        <li class="list-group-item px-0">Price: <%= @meal.price %></li>
+                        <li class="list-group-item px-0">Cook: <%= @meal.user.username %></li> <%# this could link to user show page of the cook #%> 
+                    </ul>
+                    <a href="<%=new_meal_order_path(@meal)%>" class="btn btn-warning mt-3">Order Now</a>
+                </div>
+            </div>
         </div>
     </div>
 
-
-    <div class="col-10 offset-1 mt-5">
-        <h3>Leave a Review</h3>
-        
-        <% if @review.errors.any? %> 
-            <% @review.errors.full_messages.each do |msg| %> 
-                <p><%= msg %> </p>
+    <div class="row">
+        <div class="col-md-10 offset-md-1 mt-5 p-3">
+            <h3>Leave a Review</h3>
+            
+            <% if @review.errors.any? %> 
+                <% @review.errors.full_messages.each do |msg| %> 
+                    <p><%= msg %> </p>
+                <% end %> 
             <% end %> 
-        <% end %> 
-        
-        <%= form_with(model:[@meal, @review]) do |form|%>
-        <div class="mb-3">
-            <%=form.label :rating%>
-            <br>
-            <% 5.times do |i|%>
-                <%=form.radio_button :rating, i + 1%>
-                <%=form.label :rating, i + 1%>
-            <% end %>
-          </div>    
-
+            
+            <%= form_with(model:[@meal, @review]) do |form|%>
             <div class="mb-3">
-                <%= form.label :body, "Review", class: "form-label" %>
+                <%=form.label :rating%>
                 <br>
-                <%= form.text_area :body, cols: 50, rows: 5, class: "form-control" %>
-            </div>
-            <%= form.submit class: "btn btn-info mb-3"%>
-        <% end %>
-    </div>
+                <% 5.times do |i|%>
+                    <%=form.radio_button :rating, i + 1%>
+                    <%=form.label :rating, i + 1%>
+                <% end %>
+            </div>    
 
-    <div class="col-10 offset-1 mt-5">
-        <h3>All Reviews</h3>
-        <% @reviews.each do |review|%>
-            <% if(review.is_approved) %>
-                <p class="starability-result" data-rating="<%= review.rating %>"></p>
-                <p>Review: <%= review.body %></p>
-                <p>By: <%= review.user.username %></p>
-                <p class="text-muted mb-4"><small>Posted <%= time_ago_in_words(review.created_at) %> ago </small></p>
-            <% else %>
-                <div>
-                    <% if can? :crud, @meal %>
-                        <p class="starability-result" data-rating="<%= review.rating %>"></p>
-                        <p>Review: <%= review.body %></p>
-                        <p>By: <%= review.user.username %></p>
-                        <p class="text-muted mb-4"><small>Posted <%= time_ago_in_words(review.created_at) %> ago </small></p>
-                        <%= button_to "Approve", meal_review_path(@meal, review), method: :patch%>
-                    <% end %>
+                <div class="mb-3">
+                    <%= form.label :body, "Review", class: "form-label" %>
+                    <br>
+                    <%= form.text_area :body, cols: 50, rows: 5, class: "form-control" %>
                 </div>
+                <%= form.submit class: "btn btn-dark text-uppercase p-3"%>
             <% end %>
+        </div>
 
-        <% end %> 
+        <div class="col-10 offset-1 mt-5">
+            <h3>All Reviews</h3>
+            <% @reviews.each do |review|%>
+                <% if(review.is_approved) %>
+                    <p class="starability-result" data-rating="<%= review.rating %>"></p>
+                    <p>Review: <%= review.body %></p>
+                    <p>By: <%= review.user.username %></p>
+                    <p class="text-muted mb-4"><small>Posted <%= time_ago_in_words(review.created_at) %> ago </small></p>
+                <% else %>
+                    <div>
+                        <% if can? :crud, @meal %>
+                            <p class="starability-result" data-rating="<%= review.rating %>"></p>
+                            <p>Review: <%= review.body %></p>
+                            <p>By: <%= review.user.username %></p>
+                            <p class="text-muted mb-4"><small>Posted <%= time_ago_in_words(review.created_at) %> ago </small></p>
+                            <%= button_to "Approve", meal_review_path(@meal, review), method: :patch%>
+                        <% end %>
+                    </div>
+                <% end %>
+
+            <% end %> 
+        </div>
+
     </div>
-
 </div>
