@@ -6,9 +6,13 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 
+
+
+Order.destroy_all
 User.destroy_all
 Meal.destroy_all
 Review.destroy_all
+Order.destroy_all
 
 DEFAULT_PASSWORD = "123"
 INGREDIENTSARR = [
@@ -106,14 +110,14 @@ end
 users = User.all
 
 40.times do |n|
-  meal =
-    Meal.create(
-      title: Faker::Food.dish,
-      description: Faker::Food.description,
-      ingredients: INGREDIENTSARR.sample(rand(2..10)).join(","),
-      img_url: "https://loremflickr.com/640/640/meals?random=#{n + 1}",
-      price: Faker::Commerce.price,
-      user: users.sample
+    
+    meal = Meal.create(
+        title: Faker::Food.dish,
+        description: Faker::Food.description,
+        ingredients: INGREDIENTSARR.sample(rand(2..10)).join(", "), # added a space after comma in join
+        img_url: "https://loremflickr.com/640/640/meals?random=#{n + 1}",
+        price: Faker::Commerce.price,
+        user: users.sample
     )
 
   if meal.valid?

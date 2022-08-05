@@ -24,7 +24,12 @@
 </div>
   <% if user_signed_in? %>
    <div class="d-flex justify-content-center my-4">
+   <% if current_user.is_cook %>
+    <a class="btn btn-dark text-uppercase p-3" href="<%= new_meal_path %>">Create a Meal!</a>
+   <% else %>
    <a class="btn btn-dark text-uppercase p-3" href="<%= meals_path %>">Enter to Shop</a>
+
+   <% end %>
    </div>
   <% else %>
  <div class="d-flex justify-content-center my-4">

@@ -12,7 +12,7 @@ class OrdersController < ApplicationController
 
         if @order.save
             flash[:notice] = "Order created successfully!"
-            redirect_to user_path(current_user)
+            redirect_to show_admin_panel_user_path(current_user)
         else
             flash[:alert] = "Cannot create order!"
             render "/orders/new", status: 303

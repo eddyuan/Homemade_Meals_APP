@@ -1,15 +1,16 @@
-<div>
-    <div>
-        <p>Order Information</p>
-        <p><strong>Recipient Name: </strong> <%=@order.recipient%></p>
-        <p><strong>Address: </strong> <%=@order.address%></p>
-        <p><strong>Created at: </strong> <%=@order.created_at%></p>
+<div class="container d-flex justify-content-center flex-column align-items-center card p-4 m-5">
+    <div class="container container-md">
+        <h2 class="text-center"><strong>Order ID#<%=@order.id%> </strong> </h2>
+        <p class="text-center"><strong>Recipient Name: </strong> <%=@order.recipient%></p>
+        <p class="text-center"><strong>Address: </strong> <%=@order.address%></p>
+        <p class="text-center"><strong>Price: </strong> <%= number_to_currency(@order.meal.price, precision: 2)%></p>
+        <p class="text-center"><strong>Ordered on: </strong> <%=@order.created_at.strftime("%Y-%m-%d")%></p>
     </div>
     <% @meal = @order.meal%>
-    <div class="card col m-3 py-3" style="width: 25rem;">
-        <img src="<%= @meal.img_url%>" class="card-img-top " alt="" style="width: 22rem; height: 15rem">
+    <div class="card col m-3 text-center" style="width: 25rem;">
+        <img src="<%= @meal.img_url%>" class="card-img-top " alt="">
         <div class="card-body">
-            <h5 class="card-title"><a href="<%=meal_path(@meal)%>" class="text-decoration-none"><%= @meal.title%></a></h5>
+            <h5 class="card-title"><a href="<%=meal_path(@meal)%>" class="text-dark fw-bold"><%= @meal.title%></a></h5>
             <p class="card-text text-truncate"><%= @meal.description%></p>
         </div>
     </div>

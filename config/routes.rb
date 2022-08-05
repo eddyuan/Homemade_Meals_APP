@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount Notifications::Engine => "/notifications"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")
@@ -14,5 +15,7 @@ Rails.application.routes.draw do
   get 'users/:id/admin_panel', to: 'users#admin_panel', as: :show_admin_panel_user
 
 resources :orders, only:[:show]
+
+get 'search', to: 'searches#show'
 
 end

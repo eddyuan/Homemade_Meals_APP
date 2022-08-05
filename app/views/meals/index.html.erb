@@ -17,20 +17,19 @@
          
         <% @meals.each do |meal| %>
             <div class="item-container">
-                <div class="card mb-3 index-card">
-                    <%= image_tag meal.img_url, class:"card-img-top" %>
+            
+                <div class="card mb-1 index-card h-100">
+                   <%= image_tag meal.img_url, class:"card-img-top" %>
                     <div class="card-body">
-                        <div class="mb-1">
+                        <div class="mb-1 d-flex justify-content-center">
                         <%= link_to meal.title, meal_path(meal), class:"title-list-item"%>
                         </div>
-                        <div class="mb-3 index-chef">
+                        <div class="mb-3 index-chef d-flex justify-content-center">
                          Cook: <%= link_to meal.user.username, user_path(meal.user) %>
                         </div>
-                        <div>
-                       <%= meal.reviews.average(:rating) %>
-                       <%= meal.reviews.sum(:rating) %>
-                       <%= meal.ingredients %>
-                       </div>
+                        <div >
+                            <%= meal.description %>
+                        </div>
                     </div>
                 </div>
             </div>

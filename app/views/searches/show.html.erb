@@ -1,0 +1,21 @@
+<h1 class="text-center mb-3"><%= pluralize(@meals.count, "Result") %></h1>
+<div class="flex-container mx-5">
+    <% @meals.each do |meal| %>
+        <div class="item-container">
+                <div class="card mb-3 index-card">
+                    <%= image_tag meal.img_url, class:"card-img-top" %>
+                    <div class="card-body">
+                        <div class="mb-1">
+                        <%= link_to meal.title, meal_path(meal), class:"title-list-item"%>
+                        </div>
+                        <div class="mb-3 index-chef">
+                         Cook: <%= link_to meal.user.username, user_path(meal.user) %>
+                        </div>
+                        <div>
+                       <%= meal.ingredients %>
+                       </div>
+                    </div>
+                </div>
+        </div>
+    <% end %>  
+</div>
