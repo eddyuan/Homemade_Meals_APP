@@ -30,8 +30,8 @@
             <%= form.text_area :description, cols:20, rows: 3, class:"form-control"%>
           </div>
           <div class="form-outline mb-4">
-            <%= form.label :ingredients %>
-            <%= form.text_area :ingredients, cols:20, rows: 2, class:"form-control"%>
+            <%= form.label :ingredient_names %>
+            <%= form.text_area :ingredient_names, cols:20, rows: 2, class:"form-control"%>
           </div>
           <div class="form-outline mb-4">
             <%= form.label :price %>
@@ -49,3 +49,25 @@
     </div>
   </div>
 </section>
+
+<script>
+  <%# selectize doc:
+    https://github.com/selectize/selectize.js/blob/master/docs/usage.md
+    %>
+    $(function() {
+        $('#meal_ingredient_name').selectize({
+            delimeter: ",",
+            persist: false,
+            labelField: "name", //Column name in database
+            valueField: "name",
+            searchField: "name",
+            options: <% Ingredient.select(:name).to_json(except: [:id]).html_safe %>,
+            create: function(input){
+                return{
+                    name: input
+                }
+            }
+        });
+    });
+
+</script>

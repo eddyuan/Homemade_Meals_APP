@@ -48,9 +48,17 @@
                   <a class="nav-link text-dark" href="<%= main_app.meals_path %>">Meals</a>
               </li>
                 <li class="nav-item m-1">
-                  <a class="nav-link" href="<%= main_app.show_admin_panel_user_path(current_user.id) %>">Hello <%= current_user.username %> </a>
+                  <a class="nav-link position-relative" href="<%= main_app.show_admin_panel_user_path(current_user.id) %>">
+                    <%if Notification.unread_count(current_user) != 0%>
+                        <span class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger">
+                          <%=Notification.unread_count(current_user)%>
+                        <span class="visually-hidden">unread messages</span>
+                      </span>
+                    <% end %>
+                    Hello <%= current_user.username %>
+                  </a>
               </li>
-              <li class="nav-item m-1">
+              <li class="nav-item m-1 ms-2">
                 <%= button_to "Log out", main_app.session_path, method: :delete, class: "btn btn-danger" %>
               </li>
                 <% else %>

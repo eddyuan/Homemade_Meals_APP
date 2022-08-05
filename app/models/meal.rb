@@ -1,18 +1,25 @@
 class Meal < ApplicationRecord
-  belongs_to :user
-  has_many :reviews, dependent: :destroy
+    
+    belongs_to :user
+    has_many :reviews, dependent: :destroy
+    has_many :orders, dependent: :destroy
+    has_many :ingredientings, dependent: :destroy
+    has_many :ingredients, through: :ingredientings, source: :ingredient
+    
+    validates :title, presence: true
+    # validates :ingredients, presence: true
+    validates :price, presence: true, numericality: { :greater_than_or_equal_to => 0 }
 
-  validates :title, presence: true
-  validates :ingredients, presence: true
-  validates :price,
-            presence: true,
-            numericality: {
-              greater_than_or_equal_to: 0
-            }
 
-  has_many :orders, dependent: :nullify
+    def ingredient_names
+        self.ingredients.map(&:name).join(", ")
+    end
 
-  def average_rating
-    self.reviews.count > 0 ? self.reviews.average(:rating) : 0
-  end
+    def ingredient_names=(rhs)
+        self.ingredients = rhs.strip.split(/\s*,\s*/).map do |ingredient_name|
+            Ingredient.find_or_create_by(name: ingredient_name.downcase)
+        end
+    end
+
+
 end

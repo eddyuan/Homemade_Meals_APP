@@ -16,6 +16,8 @@ Rails.application.routes.draw do
 
 resources :orders, only:[:show]
 
+resources :ingredients, only:[:show]
+
 get 'search', to: 'searches#show'
 
 end

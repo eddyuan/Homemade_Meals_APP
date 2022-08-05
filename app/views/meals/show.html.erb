@@ -4,48 +4,54 @@
             <div class="col-md-6 col-lg-4">
                 <div class="p-3 p-md-4 p-lg-6 pe-md-0">
                     <div class="show-image-container ">
-                        <%= image_tag @meal.img_url, class:"show-image" %>
+        <%= image_tag @meal.img_url, class:"show-image" %>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-8">
+    <div class="col-md-6 col-lg-8">
                 <div class="p-3 p-md-4 p-lg-6 ps-md-0">
-                    <h2 class="card-title"><strong><%= @meal.title %></strong></h2>
-					
-					
-					<div class="d-flex align-items-center mb-3">
-						<h4 class="text-danger m-0">$<%= @meal.price %></h4>
+                <h2 class="card-title"><strong><%= @meal.title %></strong></h2>
+
+                <div class="d-flex align-items-center mb-3">
+						<h4 class="text-danger m-0"><%= number_to_currency(@meal.price, precision: 2) %></h4>
 						<h4 class="mx-2 my-0">·</h4>
 						<%= image_tag "https://cdn-icons-png.flaticon.com/512/1249/1249623.png?w=740&t=st=1659576712~exp=1659577312~hmac=dc34fb451a33ca2ac4436539d1286c344439758b06b7303f091b97e646e43b0a", style:"width: 1rem"%>
 						<span class="ms-1"><%= @meal.user.username %></span>
 					</div>
                     <div class="mb-3"><%= @meal.description %></div>
                     <div class="mb-3">
-						<small>
-							<strong>Ingredients:</strong>
-							<br>
-							<%= @meal.ingredients %>
-						</small>
+
+                        <% unless @meal.ingredients.empty? %>
+                        <small>
+                            <strong>Ingredients:</strong>
+                            <br>
+                            <% @meal.ingredients.each do |ingredient| %>
+                            <%= link_to(ingredient.name, ingredient_path(ingredient), class:'badge rounded-pill bg-primary')%>
+                            <%end%>
+                        </small>
+                        <% end %>
 					</div>
-                    <a href="<%=new_meal_order_path(@meal)%>" class="btn btn-warning mt-3">Order Now</a>
-                </div>
-            </div>
+                <a href="<%=new_meal_order_path(@meal)%>" class="btn btn-warning">Order Now</a>
+              </div>
         </div>
     </div>
+</div>
 
-    <div class="row mt-5">
-        <div class="col-md-10 offset-md-1 mb-3 p-3">
-            <h3>Leave a Review</h3>
-            
-            <% if @review.errors.any? %> 
-                <% @review.errors.full_messages.each do |msg| %> 
-                    <p><%= msg %> </p>
-                <% end %> 
+
+    <div class="col-md-10 offset-md-1 mt-5 p-3">
+        <h3>Leave a Review</h3>
+        
+        <% if @review.errors.any? %> 
+            <% @review.errors.full_messages.each do |msg| %> 
+                <p><%= msg %> </p>
             <% end %> 
-            
-            <%= form_with(model:[@meal, @review]) do |form|%>
-            <div class="mb-3">
-				<div class="pt-3">
+        <% end %> 
+
+
+        
+    <%= form_with(model:[@meal, @review]) do |form|%>
+      <div class="mb-3">
+            <div class="pt-3">
 					<%= form.label :rating %>
 					<fieldset class="starability-basic">
 						<% 6.times do |i|%>
@@ -58,11 +64,36 @@
 						<% end %>
 					</fieldset>
 				</div>
-            </div>    
-                <div class="mb-3">
-                    <%= form.label :body, "Review", class: "form-label" %>
-                    <br>
-                    <%= form.text_area :body, cols: 50, rows: 5, class: "form-control" %>
+            </div>
+
+
+            <div class="mb-3">
+                <%= form.label :body, "Review", class: "form-label" %>
+                <br>
+                <%= form.text_area :body, cols: 50, rows: 5, class: "form-control" %>
+            </div>
+            <%= form.submit class: "btn btn-dark text-uppercase"%>
+        <% end %>
+    </div>
+
+
+    <div class="col-md-10 offset-md-1 mb-3 p-3 mt-5">
+        <h3>All Reviews</h3>
+        <% @reviews.each do |review|%>
+            <% if(review.is_approved) %>
+                <p class="starability-result" data-rating="<%= review.rating %>"></p>
+                <p>Review: <%= review.body %></p>
+                <p>By: <%= review.user.username %></p>
+                <p class="text-muted mb-4"><small>Posted <%= time_ago_in_words(review.created_at) %> ago </small></p>
+            <% else %>
+                <div>
+                    <% if can? :crud, @meal %>
+                        <p class="starability-result" data-rating="<%= review.rating %>"></p>
+                        <p>Review: <%= review.body %></p>
+                        <p>By: <%= review.user.username %></p>
+                        <p class="text-muted mb-4"><small>Posted <%= time_ago_in_words(review.created_at) %> ago </small></p>
+                        <%= button_to "Approve", meal_review_path(@meal, review), method: :patch, class:"btn btn-dark"%>
+                    <% end %>
                 </div>
                 <%= form.submit class: "btn btn-dark text-uppercase"%>
             <% end %>
@@ -92,4 +123,6 @@
         </div>
 
     </div>
+
+</div>
 </div>

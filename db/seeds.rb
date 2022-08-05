@@ -6,46 +6,14 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 
+Ingredienting.destroy_all
+Ingredient.destroy_all
 Order.destroy_all
 User.destroy_all
 Meal.destroy_all
 Review.destroy_all
 
 DEFAULT_PASSWORD = "123"
-INGREDIENTSARR = [
-  "Bacon",
-  "Beef fat",
-  "Butter",
-  "Chicken fat",
-  "Cocoa butter",
-  "Coconut or coconut oil",
-  "Hydrogenated fats and oils",
-  "Lard",
-  "Palm or palm kernel oil",
-  "Baking powder",
-  "Baking soda",
-  "Brine",
-  "Celery salt",
-  "Garlic salt",
-  "Brown sugar",
-  "Cane juice extract",
-  "Corn syrup",
-  "Honey",
-  "Invert sugar",
-  "Lactose",
-  "Liquid sugar",
-  "Maltos",
-  "Chicken",
-  "Pork",
-  "Lamb",
-  "Shrimp",
-  "Fish",
-  "Peanut",
-  "Bea",
-  "Banana",
-  "Apple",
-  "Ginger"
-]
 
 COOK_IMAGES = [
   "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80", #1
@@ -114,28 +82,39 @@ end
 
 users = User.all
 
+
+
+INGREDIENT_NUM = 20
+INGREDIENT_NUM.times do
+    Ingredient.create(
+        name: Faker::Food.ingredient.downcase
+    )
+end
+ingredients = Ingredient.all
+
+
 40.times do |n|
-  meal =
-    Meal.create(
-      title: Faker::Food.dish,
-      description: Faker::Food.description,
-      ingredients: INGREDIENTSARR.sample(rand(2..10)).join(", "), # added a space after comma in join
-      img_url: "https://loremflickr.com/640/640/meals?random=#{n + 1}",
-      price: Faker::Commerce.price,
-      user: users.sample
+    
+    meal = Meal.create(
+        title: Faker::Food.dish,
+        description: Faker::Food.description,
+        img_url: "https://loremflickr.com/640/640/meals?random=#{n + 1}",
+        price: Faker::Commerce.price,
+        user: users.sample
     )
 
-  if meal.valid?
-    rand(1..5).times do
-      rating = rand(1..5)
-      review =
-        Review.create(
-          rating: rating,
-          body: Faker::Lorem.paragraph(sentence_count: 5),
-          meal: meal,
-          user: users.sample,
-          is_approved: true
-        )
+    if meal.valid?
+        rand(1..5).times do
+            rating = rand(1..5)
+            review = Review.create(
+                rating: rating,
+                body: Faker::Lorem.paragraph(sentence_count: 5),
+                meal: meal,
+                user: users.sample,
+                is_approved: true
+            )
+        end
+        meal.ingredients = ingredients.shuffle.slice(0, rand(ingredients.count)) 
     end
   end
 end

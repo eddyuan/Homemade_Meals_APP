@@ -1,4 +1,4 @@
-<h1 class="text-center mb-3"><%= pluralize(@meals.count, "Result") %> with "<%=@keyword%>"</h1>
+<h1 class="text-center mb-3"><%= pluralize(@meals.count, "Result") %> with ingredient "<%=@ingredient.name%>"</h1>
 <div class="flex-container mx-5">
     <% @meals.each do |meal| %>
         <div class="item-container">
