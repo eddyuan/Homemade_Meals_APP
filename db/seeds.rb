@@ -10,7 +10,6 @@ Order.destroy_all
 User.destroy_all
 Meal.destroy_all
 Review.destroy_all
-Order.destroy_all
 
 DEFAULT_PASSWORD = "123"
 INGREDIENTSARR = [
@@ -93,6 +92,14 @@ CUSTOMER_IMAGES = [
   "https://images.unsplash.com/photo-1587723958656-ee042cc565a1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80", #19
   "https://images.unsplash.com/photo-1531891437562-4301cf35b7e4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1364&q=80" #20
 ]
+
+User.create(
+  username: "1",
+  email: "1@1.com",
+  profile_img_url: COOK_IMAGES[1],
+  password: "1",
+  is_cook: true
+)
 
 20.times do |n|
   username = Faker::Name.first_name

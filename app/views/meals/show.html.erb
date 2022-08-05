@@ -11,12 +11,22 @@
             <div class="col-md-6 col-lg-8">
                 <div class="p-3 p-md-4 p-lg-6 ps-md-0">
                     <h2 class="card-title"><strong><%= @meal.title %></strong></h2>
-                    <p class="card-text"><%= @meal.description %></p>
-                    <ul class="list-group list-group-flush mx-0">
-                        <li class="list-group-item px-0">Ingredients: <%= @meal.ingredients %></li>
-                        <li class="list-group-item px-0">Price: <%= @meal.price %></li>
-                        <li class="list-group-item px-0">Cook: <%= @meal.user.username %></li> <%# this could link to user show page of the cook #%> 
-                    </ul>
+					
+					
+					<div class="d-flex align-items-center mb-3">
+						<h4 class="text-danger m-0">$<%= @meal.price %></h4>
+						<h4 class="mx-2 my-0">·</h4>
+						<%= image_tag "https://cdn-icons-png.flaticon.com/512/1249/1249623.png?w=740&t=st=1659576712~exp=1659577312~hmac=dc34fb451a33ca2ac4436539d1286c344439758b06b7303f091b97e646e43b0a", style:"width: 1rem"%>
+						<span class="ms-1"><%= @meal.user.username %></span>
+					</div>
+                    <div class="mb-3"><%= @meal.description %></div>
+                    <div class="mb-3">
+						<small>
+							<strong>Ingredients:</strong>
+							<br>
+							<%= @meal.ingredients %>
+						</small>
+					</div>
                     <a href="<%=new_meal_order_path(@meal)%>" class="btn btn-warning mt-3">Order Now</a>
                 </div>
             </div>
