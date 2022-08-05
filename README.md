@@ -37,10 +37,11 @@ end
 ...
 ```
 
-## We can also define `average_rating` for meal
+## We can also define `average_rating` for MealModel
 
 ```rb
-def average_rating
+# meal.rb
+...def average_rating
   self.reviews.count > 0 ? self.reviews.average(:rating) : 0
 end
 ```
