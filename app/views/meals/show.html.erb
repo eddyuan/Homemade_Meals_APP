@@ -1,17 +1,16 @@
-<div class="container">
-    
+<div class="container mt-5">
     <div class="card">
         <div class="row">
-            <div class="col-md-6">
-                <div class="card-body pe-md-0">
+            <div class="col-md-6 col-lg-4">
+                <div class="p-3 p-md-4 p-lg-6 pe-md-0">
                     <div class="show-image-container ">
                         <%= image_tag @meal.img_url, class:"show-image" %>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card-body">
-                    <h5 class="card-title"><%= @meal.title %></h5>
+            <div class="col-md-6 col-lg-8">
+                <div class="p-3 p-md-4 p-lg-6 ps-md-0">
+                    <h2 class="card-title"><strong><%= @meal.title %></strong></h2>
                     <p class="card-text"><%= @meal.description %></p>
                     <ul class="list-group list-group-flush mx-0">
                         <li class="list-group-item px-0">Ingredients: <%= @meal.ingredients %></li>
@@ -36,20 +35,26 @@
             
             <%= form_with(model:[@meal, @review]) do |form|%>
             <div class="mb-3">
-                <%=form.label :rating%>
-                <br>
-                <% 5.times do |i|%>
-                    <%=form.radio_button :rating, i + 1%>
-                    <%=form.label :rating, i + 1%>
-                <% end %>
+				<div class="pt-3">
+					<%= form.label :rating %>
+					<fieldset class="starability-basic">
+						<% 6.times do |i|%>
+							<% if i == 0 %>
+								<%= form.radio_button :rating, i, id:"no-rate", checked: true %>
+							<% else %>
+								<%= form.radio_button :rating, i, id:"first-rate#{i}", class:"input-no-rate" %>
+								<%= form.label :rating, i, for:"first-rate#{i}" %>
+							<% end %>
+						<% end %>
+					</fieldset>
+				</div>
             </div>    
-
                 <div class="mb-3">
                     <%= form.label :body, "Review", class: "form-label" %>
                     <br>
                     <%= form.text_area :body, cols: 50, rows: 5, class: "form-control" %>
                 </div>
-                <%= form.submit class: "btn btn-dark text-uppercase p-3"%>
+                <%= form.submit class: "btn btn-dark text-uppercase"%>
             <% end %>
         </div>
 
